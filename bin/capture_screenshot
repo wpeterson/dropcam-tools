@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require 'time'
+
+require File.absolute_path File.join( File.dirname(__FILE__), '../lib/screenshot.rb' )
+
+options = {
+  :camera_uuid => ENV['DROPCAM_UUID'],
+  :filename   => "#{ Time.now.to_i }.jpg"
+}
+
+def show_usage_and_exit
+  puts @parser
+  exit
+end
+
+@parser = OptionParser.new do |opts|
+  opts.banner = <<EOL
+capture_screenshot saves a jpg screenshot from a public Dropcam identified by UUID.
+
+  Usage: capture_screenshot [options] [UUID]
+EOL
+
+  opts.on('-u', '--uuid [UUID]', "Camera UUID") {|v| options[:camera_uuid] = v }
+  opts.on('-f', '--filename [NAME]', "Screenshot File Name") {|v| options[:filename] = v }
+  opts.on('-d', '--directory [DIR]', "Screenshot File Directory") {|v| options[:directory] = v }
+  opts.on_tail("-h", "--help", "Show this message") { show_usage_and_exit }
+end
+@parser.parse!(ARGV)
+
+options[:camera_uuid] ||= ARGV[0]
+
+unless options[:camera_uuid] && options[:filename]
+  show_usage_and_exit
+end
+
+screenshot = Screenshot.new(options)
+screenshot.save!
