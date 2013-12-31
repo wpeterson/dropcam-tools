@@ -36,3 +36,4 @@ end
 
 screenshot = Screenshot.new(options)
 screenshot.save!
+puts "#{screenshot.camera_uuid} => #{screenshot.local_file_path}"

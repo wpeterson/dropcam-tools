@@ -1,6 +1,8 @@
 require 'time'
 
 class Screenshot
+  attr_accessor :camera_uuid, :filename, :directory
+
   def initialize(options = {})
     @camera_uuid = options[:camera_uuid]
     @filename = options[:filename]
