@@ -2,7 +2,7 @@
 require 'optparse'
 require 'time'
 
-require File.absolute_path File.join( File.dirname(__FILE__), '../lib/screenshot.rb' )
+require File.expand_path File.join( File.dirname(__FILE__), '../lib/screenshot.rb' )
 
 options = {
   :camera_uuid => ENV['DROPCAM_UUID'],

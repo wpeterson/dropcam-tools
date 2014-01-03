@@ -14,7 +14,7 @@ class Screenshot
   end
 
   def local_file_path
-    return File.absolute_path( File.join(@directory, @filename) ) if @directory
+    return File.expand_path( File.join(@directory, @filename) ) if @directory
     @filename
   end
 
