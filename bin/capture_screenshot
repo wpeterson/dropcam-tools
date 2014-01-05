@@ -5,8 +5,9 @@ require 'time'
 require File.expand_path File.join( File.dirname(__FILE__), '../lib/screenshot.rb' )
 
 options = {
-  :camera_uuid => ENV['DROPCAM_UUID'],
-  :filename   => "#{ Time.now.to_i }.jpg"
+  :camera_uuid  => ENV['DROPCAM_UUID'],
+  :date_dirs    => false,
+  :filename     => "#{ Time.now.to_i }.jpg"
 }
 
 def show_usage_and_exit
@@ -24,6 +25,7 @@ EOL
   opts.on('-u', '--uuid [UUID]', "Camera UUID") {|v| options[:camera_uuid] = v }
   opts.on('-f', '--filename [NAME]', "Screenshot File Name") {|v| options[:filename] = v }
   opts.on('-d', '--directory [DIR]', "Screenshot File Directory") {|v| options[:directory] = v }
+  opts.on('-x', '--[no-]date-dirs', "User 'year/date' directories") {|v| options[:date_dirs] = v }
   opts.on_tail("-h", "--help", "Show this message") { show_usage_and_exit }
 end
 @parser.parse!(ARGV)
@@ -32,6 +34,12 @@ options[:camera_uuid] ||= ARGV[0]
 
 unless options[:camera_uuid] && options[:filename]
   show_usage_and_exit
+end
+
+if options[:date_dirs]
+  prefix = Time.now.strftime("%Y-%m")
+  # Use [year]-[month]\[filename] structure, within target dir
+  options[:filename] = File.join( prefix, options[:filename])
 end
 
 screenshot = Screenshot.new(options)
