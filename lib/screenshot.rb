@@ -1,4 +1,5 @@
 require 'time'
+require 'fileutils'
 
 class Screenshot
   attr_accessor :camera_uuid, :filename, :directory
@@ -19,7 +20,10 @@ class Screenshot
   end
 
   def save!
+    file_path = local_file_path
+    dir_path = File.dirname(file_path)
+    FileUtils.mkdir_p( dir_path ) unless File.exist?( dir_path )
 
-    system("curl -L --silent -o '#{ local_file_path }' '#{ api_url }'")
+    system("curl -L --silent -o '#{ file_path }' '#{ api_url }'")
   end
 end
