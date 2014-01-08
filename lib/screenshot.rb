@@ -24,6 +24,6 @@ class Screenshot
     dir_path = File.dirname(file_path)
     FileUtils.mkdir_p( dir_path ) unless File.exist?( dir_path )
 
-    system("curl -L --silent -o '#{ file_path }' '#{ api_url }'")
+    system("curl -L -f --compressed --silent -o '#{ file_path }' '#{ api_url }'")
   end
 end
