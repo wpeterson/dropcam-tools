@@ -2,6 +2,8 @@
 require 'optparse'
 require 'time'
 
+require File.expand_path File.join( File.dirname(__FILE__), '../lib/time_lapse.rb' )
+
 options = {
   :pattern   => "*.jpg",
   :frames_per_sec => 8,
@@ -50,12 +52,11 @@ unless num_images > 0
   show_usage_and_exit
 end
 
-cmd = "ffmpeg -f image2 -r #{ options[:frames_per_sec] }/1 -pattern_type glob -i '#{ options[:pattern] }' -vcodec libx264 #{ options[:outfile] }"
-
 puts "================================================================"
 puts "= Combining Images via Timelapse:"
 puts "= Images: #{options[:pattern]} (#{num_images} images)"
 puts "= Video: #{options[:outfile]}"
 puts "================================================================"
-puts "ffmpeg: #{cmd}"
-system(cmd)
+
+movie = TimeLapse.new(options)
+movie.save!
