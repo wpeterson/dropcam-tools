@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require 'time'
+
+options = {
+  :pattern   => "*.jpg",
+  :frames_per_sec => 8,
+  :outfile => 'timelapse.mp4'
+}
+
+def show_usage_and_exit
+  puts @parser
+  exit 1
+end
+
+def require_ffmpeg
+  unless system('which ffmpeg >/dev/null')
+    puts "ERROR: Can't find 'ffpmeg' command line tool"
+    puts "This utility requires ffmpeg be installed"
+    puts
+    puts "Try: brew install ffmpeg"
+    puts
+
+    show_usage_and_exit
+  end
+end
+
+@parser = OptionParser.new do |opts|
+  opts.banner = <<EOL
+combine_timelapse combines a series of images into a timelapse video, via ffmpeg
+
+  Usage: combine_timelapse [*.jpg]
+EOL
+
+  opts.on('-p', '--pattern [PATTERN]', "Filename Glob Pattern (ie: *.jpg)") {|v| options[:pattern] = v }
+  opts.on('-n', '--frames [FRAMES]', "Timelapse Frames per Second (fps)") {|v| options[:frames_per_sec] = v }
+  opts.on('-o', '--outfile [FILE]', "Output video file") {|v| options[:outfile] = v }
+  opts.on_tail("-h", "--help", "Show this message") { show_usage_and_exit }
+end
+@parser.parse!(ARGV)
+
+require_ffmpeg
+
+options[:pattern] = File.expand_path(options[:pattern].to_s)
+num_images = Dir.glob(options[:pattern]).size
+unless num_images > 0
+  puts "ERROR: No matching input files at #{options[:pattern]}"
+  puts
+
+  show_usage_and_exit
+end
+
+cmd = "ffmpeg -f image2 -r #{ options[:frames_per_sec] }/1 -pattern_type glob -i '#{ options[:pattern] }' -vcodec libx264 #{ options[:outfile] }"
+
+puts "================================================================"
+puts "= Combining Images via Timelapse:"
+puts "= Images: #{options[:pattern]} (#{num_images} images)"
+puts "= Video: #{options[:outfile]}"
+puts "================================================================"
+puts "ffmpeg: #{cmd}"
+system(cmd)
