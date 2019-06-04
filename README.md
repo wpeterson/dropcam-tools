@@ -33,3 +33,9 @@ The following command line tools are available:
         -n, --frames [FRAMES]            Timelapse Frames per Second (fps)
         -o, --outfile [FILE]             Output video file
         -h, --help                       Show this message
+        
+Examples
+--------
+I used these tools to capture snapshots of our coral reef aquarium and stitch them into time-lapse videos, which you can see here:
+
+[![time-lapse coral reef video](https://dl.dropboxusercontent.com/s/r3i8rciaueg2sv1/Screenshot%202019-06-04%2012.54.58.png?dl=0)](https://vimeo.com/86207977)
